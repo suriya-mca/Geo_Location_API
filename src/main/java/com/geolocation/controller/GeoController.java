@@ -18,8 +18,8 @@ public class GeoController {
         this.geoService = geoService;
     }
 
-    @GetMapping("/findMyLocation")
-    public String logoutUser (HttpServletRequest request) {
+    @GetMapping("/findMyLocation") 
+    public String logoutUser (HttpServletRequest request)  {
 
         return geoService.findMyLocation(request);
 
