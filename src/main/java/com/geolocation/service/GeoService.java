@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,13 +15,16 @@ import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.Country;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 
+import com.geolocation.model.LocationDetails;
+import com.geolocation.model.ErrorResponse;
+
 
 @Service
 public class GeoService {
 
-	public String findMyLocation(HttpServletRequest request) {
+	public ResponseEntity<?> findMyLocation(HttpServletRequest request) {
 
-		try {
+		try(DatabaseReader dbReader = createDatabaseReader()) {
 
 			String remoteIpAddress = request.getHeader("X-FORWARDED-FOR");
 
@@ -27,24 +32,43 @@ public class GeoService {
 	            remoteIpAddress = request.getRemoteAddr();
 	        }
 
-			Resource geoLiteResourceFile = new ClassPathResource("db/GeoLite2-City.mmdb");
-			File loadDatabase = geoLiteResourceFile.getFile();
-			DatabaseReader dbReader = new DatabaseReader.Builder(loadDatabase).build();
 			InetAddress ipAddress = InetAddress.getByName("128.101.101.101");
 			CityResponse response = dbReader.city(ipAddress);
+			Country country = response.getCountry();
 
-			Country getCountryName = response.getCountry();
-			String getCountryIsoCode = getCountryName.getIsoCode();
+			LocationDetails locationDetails = new LocationDetails(
+	            country.getName(),
+	            country.getIsoCode(),
+	            response.getCity().getName(),
+	            response.getLeastSpecificSubdivision().getName(),
+	            response.getPostal().getCode()
+        	);
 	        
-			return getCountryIsoCode;
+			return ResponseEntity.ok(locationDetails);
 
 		}
 		catch(IOException | GeoIp2Exception e) {
 
 			e.printStackTrace();
-			return "Error occurred while processing the request";
+
+			ErrorResponse errorResponse = new ErrorResponse(
+	            "Error occurred while processing the request",
+	            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	            e.getMessage()
+        	);
+
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        		.body(errorResponse);
 
 		}
+
+	}
+
+	private DatabaseReader createDatabaseReader() throws IOException {
+
+	    Resource geoLiteResourceFile = new ClassPathResource("db/GeoLite2-City.mmdb");
+	    File loadDatabase = geoLiteResourceFile.getFile();
+	    return new DatabaseReader.Builder(loadDatabase).build();
 
 	}
 
