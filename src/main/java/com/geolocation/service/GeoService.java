@@ -3,11 +3,10 @@ package com.geolocation.service;
 import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import com.maxmind.geoip2.DatabaseReader;
@@ -66,9 +65,9 @@ public class GeoService {
 
 	private DatabaseReader createDatabaseReader() throws IOException {
 
-	    Resource geoLiteResourceFile = new ClassPathResource("db/GeoLite2-City.mmdb");
-	    File loadDatabase = geoLiteResourceFile.getFile();
-	    return new DatabaseReader.Builder(loadDatabase).build();
+	    try (InputStream inputStream = new ClassPathResource("db/GeoLite2-City.mmdb").getInputStream()) {
+            return new DatabaseReader.Builder(inputStream).build();
+        }
 
 	}
 

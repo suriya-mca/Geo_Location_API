@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.geolocation</groupId>
-	<artifactId>IP</artifactId>
+	<artifactId>Geo</artifactId>
 	<version>0.0.1</version>
-	<name>Geo Location API</name>
+	<name>Geo</name>
 	<description>Geo Location API is a simple and effective IP "Geolocation Service"</description>
 	<properties>
 		<java.version>21</java.version>
@@ -60,10 +60,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.graalvm.buildtools</groupId>
-				<artifactId>native-maven-plugin</artifactId>
-			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
