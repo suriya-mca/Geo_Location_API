@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import com.geolocation.model.ErrorResponse;
 @Service
 public class GeoService {
 
+	@Cacheable(value = "locationCache", key = "#request.getHeader('X-FORWARDED-FOR') ?: #request.getRemoteAddr()")
 	public ResponseEntity<?> findMyLocation(HttpServletRequest request) {
 
 		try(DatabaseReader dbReader = createDatabaseReader()) {

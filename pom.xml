@@ -43,6 +43,17 @@
 		    <version>4.2.0</version>
 		</dependency>
 
+		<!-- Spring Cache and EhCache dependencies -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.ehcache</groupId>
+		    <artifactId>ehcache</artifactId>
+		    <version>3.10.8</version>
+		</dependency>
+
 		<!-- Undertow application server -->
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
