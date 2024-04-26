@@ -8,7 +8,7 @@ RUN adduser -D -u 1000 appuser && \
 	chown -R appuser:appuser /src && \
     chmod +x /src/Geo-0.0.1.jar
 
-EXPOSE 5000
+EXPOSE 8888
 
 USER appuser
 
