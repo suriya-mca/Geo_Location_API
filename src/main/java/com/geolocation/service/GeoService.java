@@ -33,7 +33,7 @@ public class GeoService {
 	            remoteIpAddress = request.getRemoteAddr();
 	        }
 
-			InetAddress ipAddress = InetAddress.getByName("128.101.101.101");
+			InetAddress ipAddress = InetAddress.getByName(remoteIpAddress);
 			CityResponse response = dbReader.city(ipAddress);
 			Country country = response.getCountry();
 
